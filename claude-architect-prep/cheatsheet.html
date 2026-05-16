@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCA Foundations · Field Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1714;
+  --bg-card: #221d18;
+  --bg-card-2: #2a241e;
+  --ink: #f0e6d2;
+  --ink-dim: #b9ad97;
+  --ink-faint: #756a58;
+  --accent: #d4954a;
+  --accent-bright: #e8a85d;
+  --danger: #c75d3a;
+  --good: #7ea874;
+  --rule: #3a3127;
+  --grid: rgba(244, 230, 205, 0.04);
+  --code-bg: #14110e;
+  --shadow: 0 1px 0 rgba(244, 230, 205, 0.04), 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Fraunces', Georgia, serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  font-size: 16px;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+/* ================== HEADER ================== */
+header.top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(26, 23, 20, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.brand-mark {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.brand-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+
+.brand-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.search-box {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.search-box input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  padding: 10px 14px 10px 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  border-radius: 3px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.search-box input::placeholder {
+  color: var(--ink-faint);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--code-bg);
+}
+
+.search-box::before {
+  content: '/';
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.kbd-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+.kbd-hint kbd {
+  font-family: inherit;
+  background: var(--bg-card-2);
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--ink-dim);
+  font-size: 10px;
+}
+
+/* ================== TABS ================== */
+nav.tabs {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+nav.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab:hover { color: var(--ink); }
+
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-num {
+  font-size: 10px;
+  color: var(--ink-faint);
+  background: var(--bg-card);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.tab.active .tab-num {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.tab-pct {
+  font-size: 9px;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+  color: var(--ink-faint);
+}
+
+/* ================== MAIN ================== */
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.panel { display: none; animation: fadeIn 0.25s ease-out; }
+.panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Panel headings */
+.panel-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.panel-title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.panel-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  margin-bottom: 32px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.panel-meta::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ================== CARDS GRID ================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 20px 22px;
+  position: relative;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.card:hover { 
+  transform: translateY(-2px); 
+  border-left-color: var(--accent-bright);
+}
+
+.card.danger { border-left-color: var(--danger); }
+.card.good { border-left-color: var(--good); }
+
+.card-num {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+}
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--accent-bright);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.card.danger .card-title { color: var(--danger); }
+.card.good .card-title { color: var(--good); }
+
+.card-body {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.card-body p + p { margin-top: 8px; }
+
+.card-body strong {
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.card.danger .card-body strong { color: var(--danger); }
+
+/* Pattern callout */
+.pattern {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--code-bg);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+}
+
+/* Tables */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 12px 0 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ref-table th {
+  text-align: left;
+  background: var(--bg-card-2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ref-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:hover td { background: var(--bg-card-2); }
+
+.ref-table td.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-bright); }
+
+/* Code blocks */
+pre.code {
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-x: auto;
+  position: relative;
+}
+
+pre.code::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.kw { color: var(--accent); }
+.str { color: var(--good); }
+.com { color: var(--ink-faint); font-style: italic; }
+.fn { color: var(--accent-bright); }
+
+/* Section headers */
+h3.section {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--ink);
+  margin: 36px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  letter-spacing: -0.01em;
+}
+
+h3.section::before {
+  content: '§ ';
+  color: var(--accent);
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+  margin-right: 4px;
+}
+
+/* Decision tree visual */
+.decision {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  border-radius: 3px;
+  margin: 12px 0;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.decision .branch { color: var(--accent); }
+.decision .answer { color: var(--good); font-weight: 700; }
+.decision .wrong { color: var(--danger); }
+
+/* Pillar (a "must know") */
+.pillar {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-2) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 24px 28px;
+  margin: 24px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.pillar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--danger) 100%);
+}
+
+.pillar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.pillar-text {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.pillar-text em { color: var(--accent-bright); font-style: italic; }
+
+/* Two-column comparison */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 16px 0;
+}
+
+@media (max-width: 720px) {
+  .compare { grid-template-columns: 1fr; }
+  .header-inner { grid-template-columns: 1fr; gap: 12px; }
+  .kbd-hint { display: none; }
+  main { padding: 20px 16px; }
+  .panel-title { font-size: 24px; }
+}
+
+/* Anti-pattern quick reference */
+.anti-list {
+  list-style: none;
+  padding: 0;
+}
+
+.anti-list li {
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--danger);
+  border-radius: 3px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.anti-list .x {
+  color: var(--danger);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.anti-list .why {
+  color: var(--ink-dim);
+  font-size: 12px;
+  font-style: italic;
+  display: block;
+  margin-top: 4px;
+}
+
+/* Highlight on search match */
+.highlight {
+  background: rgba(212, 149, 74, 0.25);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.hidden { display: none !important; }
+
+/* Footer */
+footer {
+  max-width: 1400px;
+  margin: 60px auto 30px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+footer em { color: var(--accent); font-style: italic; font-family: 'Fraunces', serif; }
+
+/* Domain weight bar */
+.weight-bar {
+  display: inline-block;
+  width: 60px;
+  height: 6px;
+  background: var(--bg-card-2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.weight-bar-fill {
+  height: 100%;
+  background: var(--accent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--rule); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">CCA·F</div>
+      <div>
+        <div class="brand-title">Foundations Field Reference</div>
+        <div class="brand-sub">A study companion to the Claude Certified Architect exam</div>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="search the entire reference…" autocomplete="off">
+    </div>
+    <div class="kbd-hint">
+      <kbd>1</kbd>–<kbd>7</kbd> tabs · <kbd>/</kbd> search · <kbd>Esc</kbd> clear
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-panel="quick"><span class="tab-num">0</span>Quick</button>
+    <button class="tab" data-panel="d1"><span class="tab-num">1</span>Agentic Arch <span class="tab-pct">27%</span></button>
+    <button class="tab" data-panel="d2"><span class="tab-num">2</span>Tools & MCP <span class="tab-pct">18%</span></button>
+    <button class="tab" data-panel="d3"><span class="tab-num">3</span>Claude Code <span class="tab-pct">20%</span></button>
+    <button class="tab" data-panel="d4"><span class="tab-num">4</span>Prompt Eng <span class="tab-pct">20%</span></button>
+    <button class="tab" data-panel="d5"><span class="tab-num">5</span>Context & Reliability <span class="tab-pct">15%</span></button>
+    <button class="tab" data-panel="anti"><span class="tab-num">6</span>Anti-Patterns</button>
+    <button class="tab" data-panel="dec"><span class="tab-num">7</span>Decision Aid</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ========== QUICK ========== -->
+<section class="panel active" id="quick">
+  <h1 class="panel-title">Quick reference, <em>at a glance</em></h1>
+  <div class="panel-meta"><span>orientation</span><span>10 must-knows · 5 mental models · the 4-step filter</span></div>
+
+  <div class="pillar">
+    <div class="pillar-label">The Single Most Important Thing</div>
+    <div class="pillar-text">The exam tests <em>judgment about tradeoffs</em>, not memorization. Every multiple-choice question presents 4 plausible options. The correct answer is almost always: <em>programmatic over prompt</em>, <em>structured over heuristic</em>, <em>root cause over symptom</em>, <em>proportionate first response</em>, and <em>preserve structure through the pipeline</em>.</div>
+  </div>
+
+  <h3 class="section">Five mental models</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-num">D1 · 27%</div>
+      <div class="card-title">Agentic loop</div>
+      <div class="card-body">A <strong>thermostat</strong>. Send → look at <span class="pattern">stop_reason</span> → if <span class="pattern">tool_use</span> execute and feed back; if <span class="pattern">end_turn</span> stop. Never read text to decide whether to loop.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">D2 · 18%</div>
+      <div class="card-title">Tool design</div>
+      <div class="card-body">A <strong>job description</strong>. If your description says "handles content," every tool applies. Be specific: purpose + inputs + outputs + when-to-use + edge cases + boundaries.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">D3 · 20%</div>
+      <div class="card-title">Claude Code</div>
+      <div class="card-body">A <strong>team handbook</strong>. CLAUDE.md is the company manual at three levels (user, project, dir). Glob-pattern rules for files spread across folders. Plan mode = look before you leap.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">D4 · 20%</div>
+      <div class="card-title">Prompt engineering</div>
+      <div class="card-body">The <strong>recipe vs. the dish</strong>. Few-shot beats prose. <span class="pattern">tool_use</span> + JSON schema guarantees syntax (NOT semantics). Batch is the overnight delivery option.</div>
+    </div>
+    <div class="card">
+      <div class="card-num">D5 · 15%</div>
+      <div class="card-title">Context management</div>
+      <div class="card-body">The <strong>lossy compression</strong> problem. Summarization loses numbers/dates/IDs. Extract structured facts into a layer that survives summarization, hand-offs, and time.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Top 10 things you must know cold</h3>
+  <ol style="font-family: 'Fraunces', serif; padding-left: 20px; line-height: 1.8;">
+    <li><strong>Loop control:</strong> while <span class="pattern">stop_reason == "tool_use"</span>; stop on <span class="pattern">"end_turn"</span>. Never parse text.</li>
+    <li><strong>Subagent spawning:</strong> requires <span class="pattern">Agent</span> (exam: <span class="pattern">Task</span>) in <span class="pattern">allowedTools</span>. Fresh context — pack everything in the prompt.</li>
+    <li><strong>Coordinator pattern:</strong> hub-and-spoke. Inter-subagent comms route through coordinator. Parallel = multiple Task calls in one response.</li>
+    <li><strong>Tool selection problems → improve descriptions first.</strong> Few-shot is second. Classifiers are over-engineering.</li>
+    <li><strong>Critical sequences (verify-before-refund) → hooks, not prompts.</strong></li>
+    <li><strong>Structured errors:</strong> <span class="pattern">errorCategory</span>, <span class="pattern">isRetryable</span>, humanReadable.</li>
+    <li><strong>CLAUDE.md hierarchy:</strong> <span class="pattern">~/.claude/</span> personal · project root shared · subdir scoped · <span class="pattern">.claude/rules/</span> for globs.</li>
+    <li><strong>Plan mode</strong> for architectural / multi-file / multi-approach. <strong>Direct</strong> for clear scoped fixes.</li>
+    <li><strong>Structured output:</strong> tool_use + JSON schema. <span class="pattern">tool_choice: any</span> forces a tool; <span class="pattern">{type:"tool", name:"X"}</span> forces a specific one.</li>
+    <li><strong>Batch API:</strong> 50% off, ≤ 24 h, no multi-turn tool calling. Never for blocking workflows.</li>
+  </ol>
+
+  <h3 class="section">The 4-step exam filter</h3>
+  <ol style="font-family: 'Fraunces', serif; padding-left: 20px; line-height: 1.8;">
+    <li>Eliminate "do nothing" / "switch model" / "wait and see" options.</li>
+    <li>Eliminate "rely on probabilistic LLM behavior" when correctness is required.</li>
+    <li>Eliminate over-engineered options when a proportionate response exists.</li>
+    <li>Pick the option that addresses the <em>root cause shown in the logs</em>.</li>
+  </ol>
+
+  <h3 class="section">The naming quirk</h3>
+  <table class="ref-table">
+    <thead><tr><th>Exam guide says</th><th>Current SDK calls it</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>Claude Code SDK</td><td class="mono">claude_agent_sdk</td><td>Both names refer to the same thing</td></tr>
+      <tr><td>Task tool</td><td class="mono">Agent</td><td>Exam will say "Task" — answer to that</td></tr>
+      <tr><td class="mono">ClaudeCodeOptions</td><td class="mono">ClaudeAgentOptions</td><td>Same shape</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Domain weight visualization</h3>
+  <table class="ref-table">
+    <tbody>
+      <tr><td>Domain 1 — Agentic Architecture</td><td class="mono">27%<span class="weight-bar"><span class="weight-bar-fill" style="width:100%"></span></span></td></tr>
+      <tr><td>Domain 3 — Claude Code</td><td class="mono">20%<span class="weight-bar"><span class="weight-bar-fill" style="width:74%"></span></span></td></tr>
+      <tr><td>Domain 4 — Prompt Engineering</td><td class="mono">20%<span class="weight-bar"><span class="weight-bar-fill" style="width:74%"></span></span></td></tr>
+      <tr><td>Domain 2 — Tools & MCP</td><td class="mono">18%<span class="weight-bar"><span class="weight-bar-fill" style="width:67%"></span></span></td></tr>
+      <tr><td>Domain 5 — Context & Reliability</td><td class="mono">15%<span class="weight-bar"><span class="weight-bar-fill" style="width:56%"></span></span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== DOMAIN 1 ========== -->
+<section class="panel" id="d1">
+  <h1 class="panel-title">Domain 1 · <em>Agentic Architecture & Orchestration</em></h1>
+  <div class="panel-meta"><span>27% of exam</span><span>seven task statements · most-tested domain</span></div>
+
+  <h3 class="section">The agentic loop</h3>
+  <pre class="code" data-lang="python"><span class="kw">while</span> <span class="kw">True</span>:
+    response = client.messages.create(<span class="com">...messages, tools, system...</span>)
+    messages.append({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: response.content})
+
+    <span class="kw">if</span> response.stop_reason == <span class="str">"end_turn"</span>:
+        <span class="kw">return</span> response  <span class="com"># done</span>
+
+    <span class="kw">if</span> response.stop_reason == <span class="str">"tool_use"</span>:
+        results = [execute_tool(b) <span class="kw">for</span> b <span class="kw">in</span> response.content <span class="kw">if</span> b.type == <span class="str">"tool_use"</span>]
+        messages.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: results})
+        <span class="kw">continue</span>
+</pre>
+
+  <h3 class="section">Hub-and-spoke pattern</h3>
+  <div class="cards">
+    <div class="card good">
+      <div class="card-title">Right pattern</div>
+      <div class="card-body">All inter-subagent communication routes through the <strong>coordinator</strong>. Subagents start with <strong>fresh context</strong>. Pack what they need into the prompt. Coordinator dynamically chooses subagents based on query.</div>
+    </div>
+    <div class="card danger">
+      <div class="card-title">Anti-pattern</div>
+      <div class="card-body"><strong>Subagents calling each other directly.</strong> Loses observability. Complicates error handling. Breaks recovery semantics. Always route through the hub.</div>
+    </div>
+    <div class="card good">
+      <div class="card-title">Parallel spawning</div>
+      <div class="card-body">Coordinator emits <strong>multiple Agent tool calls in a single response</strong>. They run in parallel. Sequential = separate turns each. Massive perf difference on research workflows.</div>
+    </div>
+    <div class="card danger">
+      <div class="card-title">Coverage gap diagnosis</div>
+      <div class="card-body">Synthesis misses subtopics + each subagent's outputs look fine? <strong>Coordinator's decomposition is too narrow.</strong> Don't blame downstream agents working correctly within scope.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Hooks — programmatic enforcement</h3>
+  <table class="ref-table">
+    <thead><tr><th>Hook event</th><th>When fired</th><th>Use case</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PreToolUse</td><td>Before tool runs</td><td>Block, modify, enforce prerequisites</td></tr>
+      <tr><td class="mono">PostToolUse</td><td>After tool returns</td><td>Normalize results, scrub PHI</td></tr>
+      <tr><td class="mono">PostToolUseFailure</td><td>Tool errored</td><td>Recovery routing</td></tr>
+      <tr><td class="mono">UserPromptSubmit</td><td>User sends message</td><td>Validate, redact</td></tr>
+      <tr><td class="mono">Stop / SubagentStop</td><td>Execution ends</td><td>Cleanup, logging</td></tr>
+      <tr><td class="mono">SubagentStart</td><td>Subagent spawning</td><td>State capture</td></tr>
+      <tr><td class="mono">PreCompact</td><td>Before compaction</td><td>Preserve key facts</td></tr>
+      <tr><td class="mono">PermissionRequest</td><td>Permission decision</td><td>Custom auth logic</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Hook vs. prompt — when to use each</h3>
+  <div class="compare">
+    <div class="card good">
+      <div class="card-title">Use a hook when</div>
+      <div class="card-body">Legal · financial · safety · regulatory · required ordering with consequences · compliance enforcement · data normalization across heterogeneous tools.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Use a prompt when</div>
+      <div class="card-body">Style · soft preferences · tone · output format consistency (with few-shot) · "be polite" · non-critical ordering.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Decomposition strategy</h3>
+  <table class="ref-table">
+    <tbody>
+      <tr><td><strong>Predictable multi-aspect</strong> review of N files</td><td>Prompt chaining (per-file + integration pass)</td></tr>
+      <tr><td><strong>Open-ended</strong> investigation that adapts</td><td>Dynamic adaptive decomposition</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Session operations</h3>
+  <table class="ref-table">
+    <thead><tr><th>Situation</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Continuing, files unchanged, data fresh</td><td class="mono">--resume &lt;name&gt;</td></tr>
+      <tr><td>Continuing but some files modified</td><td class="mono">--resume + tell agent what changed</td></tr>
+      <tr><td>Tool results stale (data shifted)</td><td>Fresh + inject structured summary</td></tr>
+      <tr><td>Two divergent approaches from baseline</td><td class="mono">fork_session=True</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== DOMAIN 2 ========== -->
+<section class="panel" id="d2">
+  <h1 class="panel-title">Domain 2 · <em>Tools & MCP</em></h1>
+  <div class="panel-meta"><span>18% of exam</span><span>five task statements</span></div>
+
+  <h3 class="section">Tool description template</h3>
+  <div class="pillar">
+    <div class="pillar-label">The 6-element template</div>
+    <div class="pillar-text"><strong>1. Purpose</strong> — what specific job · <strong>2. Input format</strong> with examples · <strong>3. Output format</strong> · <strong>4. When to use</strong> vs. similar alternatives · <strong>5. Edge cases</strong> (null, empty) · <strong>6. Boundaries</strong> (what it does NOT do)</div>
+  </div>
+
+  <h3 class="section">Tool description quality ladder</h3>
+  <div class="cards">
+    <div class="card danger">
+      <div class="card-title">Bad</div>
+      <pre class="code" style="margin:0" data-lang="json">{<span class="str">"description"</span>: <span class="str">"Retrieves order details"</span>}</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">Better</div>
+      <pre class="code" style="margin:0" data-lang="json">{<span class="str">"description"</span>: <span class="str">"Retrieves order details when given an order ID."</span>}</pre>
+    </div>
+    <div class="card good">
+      <div class="card-title">Best</div>
+      <div class="card-body" style="font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--ink);">"Retrieves order details when given an order ID (format: ORD-XXXXX). Returns status, line items, totals, ship address. Returns null if not found. Use for order inquiries; for customer profile use get_customer. Does NOT handle returns/refunds — use process_refund."</div>
+    </div>
+  </div>
+
+  <h3 class="section">Structured error response</h3>
+  <pre class="code" data-lang="json">{
+  <span class="str">"isError"</span>: <span class="kw">true</span>,
+  <span class="str">"errorCategory"</span>: <span class="str">"business"</span>,        <span class="com">// transient | validation | business | permission</span>
+  <span class="str">"isRetryable"</span>: <span class="kw">false</span>,
+  <span class="str">"errorCode"</span>: <span class="str">"REFUND_LIMIT_EXCEEDED"</span>,
+  <span class="str">"humanReadable"</span>: <span class="str">"Refund exceeds $500 policy limit; requires manager approval."</span>,
+  <span class="str">"context"</span>: { <span class="str">"requested_amount"</span>: <span class="kw">750.00</span>, <span class="str">"policy_limit"</span>: <span class="kw">500.00</span> }
+}</pre>
+
+  <h3 class="section">Error category cheat sheet</h3>
+  <table class="ref-table">
+    <thead><tr><th>Category</th><th>Example</th><th>Right response</th></tr></thead>
+    <tbody>
+      <tr><td><strong>transient</strong></td><td>Timeout, 503, network blip</td><td>Retry with backoff</td></tr>
+      <tr><td><strong>validation</strong></td><td>Invalid input format</td><td>Fix input, retry once</td></tr>
+      <tr><td><strong>business</strong></td><td>Refund &gt; policy limit</td><td>Communicate to user / escalate</td></tr>
+      <tr><td><strong>permission</strong></td><td>Auth missing, scope denied</td><td>Escalate / prompt for credentials</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">tool_choice modes</h3>
+  <table class="ref-table">
+    <thead><tr><th>Mode</th><th>Behavior</th><th>Use case</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">{type:"auto"}</td><td>Model picks tool or text</td><td>Conversational agent</td></tr>
+      <tr><td class="mono">{type:"any"}</td><td>Must call SOME tool</td><td>Force structured output</td></tr>
+      <tr><td class="mono">{type:"tool", name:"X"}</td><td>Must call THIS tool</td><td>Pre-flight extraction</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">MCP scoping</h3>
+  <table class="ref-table">
+    <thead><tr><th>File</th><th>Scope</th><th>Shared via git?</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">.mcp.json</td><td>Project</td><td><strong style="color:var(--good)">Yes</strong></td><td>Team-shared MCP servers</td></tr>
+      <tr><td class="mono">~/.claude.json</td><td>User</td><td><strong style="color:var(--danger)">No</strong></td><td>Personal/experimental</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">.mcp.json with env expansion</h3>
+  <pre class="code" data-lang="json">{
+  <span class="str">"mcpServers"</span>: {
+    <span class="str">"github"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@modelcontextprotocol/server-github"</span>],
+      <span class="str">"env"</span>: { <span class="str">"GITHUB_TOKEN"</span>: <span class="str">"${GITHUB_TOKEN}"</span> }   <span class="com">// ← env expansion</span>
+    }
+  }
+}</pre>
+
+  <h3 class="section">MCP tools vs. resources</h3>
+  <div class="compare">
+    <div class="card">
+      <div class="card-title">Tools</div>
+      <div class="card-body">Take an action / fetch dynamic data. Examples: <span class="pattern">create_issue</span>, <span class="pattern">lookup_order</span>. Cause a tool call.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resources</div>
+      <div class="card-body">Expose static or semi-static <strong>content catalogs</strong>. Examples: issue lists, doc hierarchies, DB schemas. Reduce exploratory tool calls — agent sees what's available upfront.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Built-in tools</h3>
+  <table class="ref-table">
+    <thead><tr><th>Tool</th><th>Use when</th><th>Failure mode</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Grep</td><td>Search file contents</td><td>—</td></tr>
+      <tr><td class="mono">Glob</td><td>Match paths by pattern</td><td>—</td></tr>
+      <tr><td class="mono">Read</td><td>Load full file</td><td>Token cost on large files</td></tr>
+      <tr><td class="mono">Write</td><td>Wholesale file creation</td><td>—</td></tr>
+      <tr><td class="mono">Edit</td><td>Targeted modification (unique text)</td><td>Fails on non-unique text → fall back to Read+Write</td></tr>
+      <tr><td class="mono">Bash</td><td>Tests, builds, file ops</td><td>—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== DOMAIN 3 ========== -->
+<section class="panel" id="d3">
+  <h1 class="panel-title">Domain 3 · <em>Claude Code</em></h1>
+  <div class="panel-meta"><span>20% of exam</span><span>most "new" domain · six task statements</span></div>
+
+  <h3 class="section">CLAUDE.md hierarchy</h3>
+  <table class="ref-table">
+    <thead><tr><th>Location</th><th>Scope</th><th>Shared?</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">~/.claude/CLAUDE.md</td><td>USER</td><td><span style="color:var(--danger)">No</span></td><td>Personal preferences</td></tr>
+      <tr><td class="mono">&lt;project&gt;/CLAUDE.md</td><td>PROJECT</td><td><span style="color:var(--good)">Yes</span></td><td>Team-wide standards</td></tr>
+      <tr><td class="mono">&lt;project&gt;/&lt;dir&gt;/CLAUDE.md</td><td>DIRECTORY</td><td><span style="color:var(--good)">Yes</span></td><td>Subdirectory-specific rules</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Choosing the right configuration mechanism</h3>
+  <table class="ref-table">
+    <thead><tr><th>Need</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Universal project standard</td><td class="mono">project CLAUDE.md</td></tr>
+      <tr><td>Per directory</td><td class="mono">&lt;dir&gt;/CLAUDE.md</td></tr>
+      <tr><td>Files spread across dirs by pattern (e.g., **/*.test.*)</td><td class="mono">.claude/rules/&lt;topic&gt;.md</td></tr>
+      <tr><td>User-invoked instructions</td><td class="mono">.claude/commands/&lt;name&gt;.md</td></tr>
+      <tr><td>User-invoked multi-step workflow with own tools</td><td class="mono">.claude/skills/&lt;name&gt;/SKILL.md</td></tr>
+      <tr><td>Diagnostic: which configs loaded?</td><td class="mono">/memory</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Path-specific rule</h3>
+  <pre class="code" data-lang="markdown"><span class="com"># .claude/rules/testing.md</span>
+---
+paths:
+  - <span class="str">"**/*.test.tsx"</span>
+  - <span class="str">"**/*.test.ts"</span>
+---
+When editing or generating test files:
+- Use Vitest (NOT Jest)
+- Tests follow Arrange-Act-Assert
+- Mock with vi.mock</pre>
+
+  <h3 class="section">Slash command</h3>
+  <pre class="code" data-lang="markdown"><span class="com">&lt;!-- .claude/commands/review.md --&gt;</span>
+---
+description: Run team's standard code review checklist
+argument-hint: [files-or-PR-number]
+allowed-tools: [<span class="str">"Read"</span>, <span class="str">"Grep"</span>, <span class="str">"Glob"</span>]
+---
+
+You are performing a code review using our team's checklist:
+<span class="com">...</span>
+Review the following: $ARGUMENTS</pre>
+
+  <h3 class="section">Skill with context: fork</h3>
+  <pre class="code" data-lang="yaml">---
+name: codebase-explorer
+description: Map an unfamiliar codebase
+context: fork                    <span class="com"># ← runs in isolated subagent</span>
+allowed-tools: [<span class="str">"Read"</span>, <span class="str">"Grep"</span>, <span class="str">"Glob"</span>]
+argument-hint: [scope-description]
+---</pre>
+
+  <h3 class="section">Plan mode vs. direct execution</h3>
+  <div class="compare">
+    <div class="card good">
+      <div class="card-title">Plan mode</div>
+      <div class="card-body">Architectural changes · multi-file (10+) · multiple valid approaches · monolith → microservices · library migration · designing new caching layer.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Direct execution</div>
+      <div class="card-body">Single-file bug fix with clear stack trace · adding a date validation · renaming a variable across known locations · implementing function with fixed signature.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Iterative refinement techniques</h3>
+  <table class="ref-table">
+    <thead><tr><th>Situation</th><th>Technique</th></tr></thead>
+    <tbody>
+      <tr><td>Inconsistent transformation results</td><td>Concrete input/output examples (2-4)</td></tr>
+      <tr><td>Building toward precise spec</td><td>Test-driven iteration (paste test failures)</td></tr>
+      <tr><td>Unfamiliar domain</td><td>Interview pattern (have Claude ask 5 questions first)</td></tr>
+      <tr><td>Multiple <strong>interacting</strong> issues</td><td>Single message with all issues</td></tr>
+      <tr><td>Multiple <strong>independent</strong> issues</td><td>Sequential one-by-one</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">CI/CD integration</h3>
+  <pre class="code" data-lang="bash"><span class="com"># WRONG — hangs waiting for input</span>
+claude <span class="str">"Analyze this PR"</span>
+
+<span class="com"># RIGHT — non-interactive, prints, exits</span>
+claude <span class="kw">-p</span> <span class="str">"Analyze this PR"</span> \
+  <span class="kw">--output-format</span> json \
+  <span class="kw">--json-schema</span> review-schema.json</pre>
+
+  <div class="card danger" style="margin-top: 12px;">
+    <div class="card-title">Non-existent flags (exam traps)</div>
+    <div class="card-body"><span class="pattern">CLAUDE_HEADLESS=true</span> · <span class="pattern">--batch</span> · <span class="pattern">--non-interactive</span> — these don't exist. Only <strong>-p</strong> / <strong>--print</strong> works.</div>
+  </div>
+</section>
+
+<!-- ========== DOMAIN 4 ========== -->
+<section class="panel" id="d4">
+  <h1 class="panel-title">Domain 4 · <em>Prompt Engineering & Structured Output</em></h1>
+  <div class="panel-meta"><span>20% of exam</span><span>your strongest domain · six task statements</span></div>
+
+  <h3 class="section">Vague vs. explicit criteria</h3>
+  <div class="compare">
+    <div class="card danger">
+      <div class="card-title">Vague (doesn't work)</div>
+      <div class="card-body">"Be conservative." · "Only report high-confidence findings." · "Have model self-report confidence and filter."</div>
+    </div>
+    <div class="card good">
+      <div class="card-title">Explicit (works)</div>
+      <div class="card-body">Allow-list of categories: bugs, security vulns, memory leaks. Deny-list: style preferences, naming inconsistencies. Include code examples per severity.</div>
+    </div>
+  </div>
+
+  <h3 class="section">Few-shot prompting</h3>
+  <ul style="font-family: 'Fraunces', serif; padding-left: 20px;">
+    <li><strong>2-4 targeted examples</strong> beat 10 generic ones.</li>
+    <li>Cover <strong>ambiguous cases</strong>, not just easy ones.</li>
+    <li>Show the <strong>reasoning</strong> for choosing one action over plausible alternatives.</li>
+    <li>Demonstrate the <strong>desired output format</strong> precisely.</li>
+  </ul>
+
+  <h3 class="section">tool_use + JSON schema</h3>
+  <pre class="code" data-lang="python">tools = [{
+    <span class="str">"name"</span>: <span class="str">"extract_invoice"</span>,
+    <span class="str">"description"</span>: <span class="str">"Extract structured invoice data"</span>,
+    <span class="str">"input_schema"</span>: INVOICE_SCHEMA,
+}]
+
+response = client.messages.create(
+    model=<span class="str">"claude-sonnet-4-5"</span>,
+    tools=tools,
+    tool_choice={<span class="str">"type"</span>: <span class="str">"tool"</span>, <span class="str">"name"</span>: <span class="str">"extract_invoice"</span>},  <span class="com"># forced</span>
+    messages=messages,
+)</pre>
+
+  <div class="pillar">
+    <div class="pillar-label">Critical distinction</div>
+    <div class="pillar-text"><span class="pattern">tool_use</span> + JSON schema eliminates <em>syntactic</em> errors (no JSON parse failures, no markdown fences). It does <strong>NOT</strong> eliminate <em>semantic</em> errors (line items not summing to total, wrong field assignments). For semantic correctness, add paired stated/calculated fields with self-validation.</div>
+  </div>
+
+  <h3 class="section">Schema design rules</h3>
+  <table class="ref-table">
+    <tbody>
+      <tr><td>Mark fields <strong>nullable/optional</strong> if source may not contain them</td><td>→ model returns null instead of fabricating</td></tr>
+      <tr><td>Add <strong>"other" + detail</strong> field for extensible categorization</td><td>→ avoid forcing wrong bucket</td></tr>
+      <tr><td>Add <strong>"unclear"</strong> enum for ambiguous cases</td><td>→ explicit signal for human review</td></tr>
+      <tr><td>Add <strong>stated_total / calculated_total / match flag</strong> trio</td><td>→ self-detect semantic errors</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Retry with feedback</h3>
+  <pre class="code" data-lang="python"><span class="kw">for</span> attempt <span class="kw">in</span> <span class="fn">range</span>(max_retries):
+    result = call_extraction_tool(messages)
+    validation = validate(result, schema)
+
+    <span class="kw">if</span> validation.ok: <span class="kw">return</span> result
+
+    <span class="com"># Feed the SPECIFIC error back</span>
+    messages.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>:
+        <span class="fn">f</span><span class="str">"Validation failed: {validation.errors}. Please correct."</span>
+    })</pre>
+
+  <table class="ref-table" style="margin-top: 12px;">
+    <thead><tr><th>Error type</th><th>Retry helps?</th></tr></thead>
+    <tbody>
+      <tr><td>Format mismatch (date in wrong format)</td><td><span style="color:var(--good)">Yes</span></td></tr>
+      <tr><td>Schema validation (totals don't sum)</td><td><span style="color:var(--good)">Often</span></td></tr>
+      <tr><td>Required info <strong>genuinely absent from source</strong></td><td><span style="color:var(--danger)">No — retry can't conjure data</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Batch vs. real-time API</h3>
+  <table class="ref-table">
+    <thead><tr><th>Workload</th><th>API</th></tr></thead>
+    <tbody>
+      <tr><td>Pre-merge code review (developer waits)</td><td>Real-time</td></tr>
+      <tr><td>Customer support chat</td><td>Real-time</td></tr>
+      <tr><td>Multi-turn agent with tool calls</td><td>Real-time (batch lacks multi-turn)</td></tr>
+      <tr><td>Nightly debt report</td><td>Batch (50% off, ≤24h)</td></tr>
+      <tr><td>Backfill 50K classifications</td><td>Batch</td></tr>
+      <tr><td>Weekly compliance audit</td><td>Batch</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Multi-pass review architecture</h3>
+  <div class="card">
+    <div class="card-title">When to use</div>
+    <div class="card-body">PR with 4+ files showing <strong>contradictory findings</strong> or <strong>inconsistent depth</strong> = attention dilution. Don't reach for "larger context window" — that doesn't fix it. Split into per-file passes + a cross-file integration pass.</div>
+  </div>
+
+  <h3 class="section">Self-review trap</h3>
+  <div class="card danger">
+    <div class="card-title">The bias</div>
+    <div class="card-body">A model that just generated code retains its reasoning context — biased toward seeing the code as correct. Self-review (same session) catches fewer subtle issues. Even extended thinking doesn't fully fix it.</div>
+  </div>
+  <div class="card good">
+    <div class="card-title">The fix</div>
+    <div class="card-body">Spawn a <strong>separate Claude instance</strong> with no prior reasoning context for review. Fresh eyes catch issues the original missed.</div>
+  </div>
+</section>
+
+<!-- ========== DOMAIN 5 ========== -->
+<section class="panel" id="d5">
+  <h1 class="panel-title">Domain 5 · <em>Context Management & Reliability</em></h1>
+  <div class="panel-meta"><span>15% of exam</span><span>smallest by weight, threads through every scenario · six task statements</span></div>
+
+  <div class="pillar">
+    <div class="pillar-label">Unifying theme</div>
+    <div class="pillar-text"><em>Structure outlives summarization.</em> Anything important must be in a structured form that survives compression, handoffs, and time.</div>
+  </div>
+
+  <h3 class="section">Persistent case facts</h3>
+  <pre class="code" data-lang="python">case_facts = {
+    <span class="str">"customer_id"</span>: <span class="str">"CUS-12345"</span>,
+    <span class="str">"verified_identity"</span>: <span class="kw">True</span>,
+    <span class="str">"primary_issue"</span>: <span class="str">"damaged_item"</span>,
+    <span class="str">"order_id"</span>: <span class="str">"ORD-78901"</span>,
+    <span class="str">"refund_amount_authorized"</span>: <span class="kw">89.99</span>,
+}
+
+system_prompt = <span class="fn">f</span><span class="str">"""
+You are a customer support agent.
+
+CASE FACTS (current state — do not summarize away):
+{json.dumps(case_facts, indent=2)}
+
+Recent conversation summary:
+{summarized_history}
+"""</span></pre>
+
+  <h3 class="section">Escalation triggers</h3>
+  <div class="compare">
+    <div class="card good">
+      <div class="card-title">Valid triggers</div>
+      <div class="card-body">Customer explicitly requests human · policy gap (silent on request) · agent has tried and can't progress · refund &gt; policy limit (system-blocked).</div>
+    </div>
+    <div class="card danger">
+      <div class="card-title">Anti-pattern triggers</div>
+      <div class="card-body">Sentiment / frustration alone · LLM self-reported confidence · heuristic "looks complicated" · multiple lookup matches (ask for ID instead).</div>
+    </div>
+  </div>
+
+  <h3 class="section">Structured handoff payload</h3>
+  <pre class="code" data-lang="python">handoff = {
+    <span class="str">"customer_id"</span>: <span class="str">"CUS-12345"</span>,
+    <span class="str">"verified_identity"</span>: <span class="kw">True</span>,
+    <span class="str">"issue_summary"</span>: <span class="str">"Customer requesting competitor price match"</span>,
+    <span class="str">"root_cause_analysis"</span>: <span class="str">"Policy is silent on competitor matching"</span>,
+    <span class="str">"investigation_completed"</span>: [<span class="str">"Verified identity"</span>, <span class="str">"Confirmed eligibility"</span>],
+    <span class="str">"recommended_action"</span>: <span class="str">"Approve one-time match per goodwill guidance"</span>,
+    <span class="str">"blocking_constraint"</span>: <span class="str">"Requires policy exception authorization"</span>,
+}</pre>
+
+  <h3 class="section">Error propagation contract</h3>
+  <pre class="code" data-lang="python">{
+    <span class="str">"subagent"</span>: <span class="str">"web_searcher"</span>,
+    <span class="str">"failure_type"</span>: <span class="str">"timeout"</span>,
+    <span class="str">"attempted_query"</span>: <span class="str">"..."</span>,
+    <span class="str">"partial_results"</span>: [...],          <span class="com"># what we DID get</span>
+    <span class="str">"alternatives_attempted"</span>: [...],   <span class="com"># local recovery tried</span>
+    <span class="str">"alternatives_suggested"</span>: [...],   <span class="com"># for coordinator's recovery</span>
+}</pre>
+
+  <h3 class="section">Confidence calibration</h3>
+  <table class="ref-table">
+    <thead><tr><th>Approach</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Aggregate accuracy (97%) sufficient for reducing review</td><td><span style="color:var(--danger)">Hides per-segment failures</span></td></tr>
+      <tr><td>Random sampling for accuracy validation</td><td><span style="color:var(--danger)">Oversamples common types</span></td></tr>
+      <tr><td>Stratified sampling per document type / per field</td><td><span style="color:var(--good)">Right approach</span></td></tr>
+      <tr><td>Field-level confidence calibrated to validation set</td><td><span style="color:var(--good)">Right approach</span></td></tr>
+      <tr><td>Self-reported confidence as quality gate</td><td><span style="color:var(--danger)">Poorly calibrated</span></td></tr>
+      <tr><td>Self-reported confidence as routing-to-human signal</td><td><span style="color:var(--good)">OK if calibrated</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Source provenance</h3>
+  <pre class="code" data-lang="json">{
+  <span class="str">"claim"</span>: <span class="str">"AI assistants reduce review time by 30%"</span>,
+  <span class="str">"source_url"</span>: <span class="str">"https://..."</span>,
+  <span class="str">"source_document"</span>: <span class="str">"Dev Productivity Study 2025"</span>,
+  <span class="str">"source_excerpt"</span>: <span class="str">"On average... 30% faster (n=234, p&lt;0.01)"</span>,
+  <span class="str">"publication_date"</span>: <span class="str">"2025-06-15"</span>,
+  <span class="str">"methodology_context"</span>: <span class="str">"Survey-based, self-reported"</span>,
+  <span class="str">"confidence"</span>: <span class="kw">0.85</span>
+}</pre>
+
+  <div class="card good" style="margin-top: 12px;">
+    <div class="card-title">Conflicting sources</div>
+    <div class="card-body">When two sources disagree → <strong>annotate the conflict</strong> with both attributions and methodology context. Never arbitrate. Example: "Reuters reports 30% (survey, n=234) while McKinsey reports 18% (telemetry, n=1200) — methodology may explain the gap."</div>
+  </div>
+</section>
+
+<!-- ========== ANTI-PATTERNS ========== -->
+<section class="panel" id="anti">
+  <h1 class="panel-title"><em>Anti-pattern</em> recognition</h1>
+  <div class="panel-meta"><span>quick reference</span><span>eliminate these on sight</span></div>
+
+  <div class="pillar">
+    <div class="pillar-label">How to use</div>
+    <div class="pillar-text">When you see one of these in a multiple-choice option, <em>eliminate it</em>. You don't need to know the right answer to remove the wrong ones — and removing 2 of 4 leaves a 50/50 you can usually reason through.</div>
+  </div>
+
+  <h3 class="section">Domain 1 — Agentic Architecture</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>Parse assistant text to detect loop completion <span class="why">stop_reason is the only reliable signal</span></div></li>
+    <li><span class="x">✗</span><div>Iteration cap as primary stopping mechanism <span class="why">it's a backstop, not flow control</span></div></li>
+    <li><span class="x">✗</span><div>Blame downstream subagents when coordinator decomposed too narrowly <span class="why">the bug is in the coordinator</span></div></li>
+    <li><span class="x">✗</span><div>System prompt for required invariants (verify-before-refund) <span class="why">use programmatic hooks; prompts are probabilistic</span></div></li>
+    <li><span class="x">✗</span><div>Subagents communicate directly with each other <span class="why">all routing through coordinator (hub-and-spoke)</span></div></li>
+    <li><span class="x">✗</span><div>Spawn subagents sequentially when parallel is possible <span class="why">multiple Agent calls in one response = parallel</span></div></li>
+    <li><span class="x">✗</span><div>Resume session when prior tool results are stale <span class="why">fresh + structured summary instead</span></div></li>
+  </ul>
+
+  <h3 class="section">Domain 2 — Tools & MCP</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>Add few-shot to fix tool selection (as first step) <span class="why">improve descriptions first</span></div></li>
+    <li><span class="x">✗</span><div>Build a routing classifier <span class="why">over-engineered; descriptions are the right lever</span></div></li>
+    <li><span class="x">✗</span><div>Consolidate similar tools into one mega-tool with mode parameter <span class="why">descriptions or split, don't consolidate</span></div></li>
+    <li><span class="x">✗</span><div>Generic "Operation failed" error responses <span class="why">need errorCategory, isRetryable, humanReadable</span></div></li>
+    <li><span class="x">✗</span><div>Catch errors in subagents and return empty as success <span class="why">coordinator can't distinguish failures from no-results</span></div></li>
+    <li><span class="x">✗</span><div>18 tools per agent for "flexibility" <span class="why">tool overload degrades selection — scope to 4-5</span></div></li>
+    <li><span class="x">✗</span><div>MCP server config in ~/.claude.json for team sharing <span class="why">use .mcp.json (project, committed)</span></div></li>
+    <li><span class="x">✗</span><div>Hardcode credentials in .mcp.json <span class="why">use ${ENV_VAR} expansion</span></div></li>
+    <li><span class="x">✗</span><div>Build custom MCP for standard JIRA/GitHub <span class="why">use community servers</span></div></li>
+  </ul>
+
+  <h3 class="section">Domain 3 — Claude Code</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>Personal ~/.claude/CLAUDE.md for team-shared standards <span class="why">use project root CLAUDE.md (committed)</span></div></li>
+    <li><span class="x">✗</span><div>Subdir CLAUDE.md for files spread across codebase <span class="why">use .claude/rules/ with paths globs</span></div></li>
+    <li><span class="x">✗</span><div>~/.claude/commands/ for team-wide use <span class="why">use .claude/commands/ in project</span></div></li>
+    <li><span class="x">✗</span><div>Reference .claude/config.json with commands array <span class="why">doesn't exist — use .claude/commands/&lt;name&gt;.md</span></div></li>
+    <li><span class="x">✗</span><div>Direct execution for monolith → microservices <span class="why">architectural + multi-file = plan mode</span></div></li>
+    <li><span class="x">✗</span><div>Larger context window for 14-file PR review dilution <span class="why">multi-pass review is the answer</span></div></li>
+    <li><span class="x">✗</span><div>Run claude "..." in CI <span class="why">hangs; add -p flag</span></div></li>
+    <li><span class="x">✗</span><div>CLAUDE_HEADLESS=true / --batch <span class="why">don't exist; use -p</span></div></li>
+    <li><span class="x">✗</span><div>Same session reviewing its own generated code <span class="why">use independent instance</span></div></li>
+  </ul>
+
+  <h3 class="section">Domain 4 — Prompt Engineering</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>"Be conservative" / "only high confidence" <span class="why">vague — use explicit categorical criteria</span></div></li>
+    <li><span class="x">✗</span><div>Self-reported confidence as quality gate <span class="why">poorly calibrated; categorical criteria reliable</span></div></li>
+    <li><span class="x">✗</span><div>"Respond in JSON format" for guaranteed structure <span class="why">use tool_use + JSON schema</span></div></li>
+    <li><span class="x">✗</span><div>Mark all extraction fields required <span class="why">forces fabrication; nullable when source may lack</span></div></li>
+    <li><span class="x">✗</span><div>Switch ALL workflows to batch for cost savings <span class="why">batch ≤24h; not for blocking</span></div></li>
+    <li><span class="x">✗</span><div>Batch with timeout fallback to real-time <span class="why">complexity; match each API to its workload</span></div></li>
+    <li><span class="x">✗</span><div>Retry when required info is genuinely absent <span class="why">retries can't conjure data</span></div></li>
+  </ul>
+
+  <h3 class="section">Domain 5 — Context & Reliability</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>Rely on summarization to preserve customer details <span class="why">extract structured case facts persisted outside summary</span></div></li>
+    <li><span class="x">✗</span><div>Sentiment analysis to detect escalation needs <span class="why">use explicit escalation criteria</span></div></li>
+    <li><span class="x">✗</span><div>"Just give me a human" → investigate first <span class="why">honor explicit human requests immediately</span></div></li>
+    <li><span class="x">✗</span><div>Multiple lookup matches → pick highest-spending heuristically <span class="why">ask for additional identifier</span></div></li>
+    <li><span class="x">✗</span><div>Subagent timeout → "search unavailable" <span class="why">structured failure context with partial results</span></div></li>
+    <li><span class="x">✗</span><div>Aggregate accuracy (97%) sufficient for reducing review <span class="why">stratified per type and field</span></div></li>
+    <li><span class="x">✗</span><div>Synthesis arbitrarily picks one source when conflicting <span class="why">annotate conflict with both attributions</span></div></li>
+  </ul>
+
+  <h3 class="section">Cross-cutting</h3>
+  <ul class="anti-list">
+    <li><span class="x">✗</span><div>Train a separate ML classifier (as first response to LLM tooling problem) <span class="why">over-engineered; try descriptions/prompts first</span></div></li>
+    <li><span class="x">✗</span><div>Switch to higher-tier / larger context model (as fix for architectural issues) <span class="why">architecture problems aren't model problems</span></div></li>
+    <li><span class="x">✗</span><div>Comprehensive upfront instructions (as substitute for actual investigation) <span class="why">use plan mode or interview pattern</span></div></li>
+    <li><span class="x">✗</span><div>Have Claude ask user for confirmation at each step <span class="why">use programmatic enforcement; let Claude proceed</span></div></li>
+    <li><span class="x">✗</span><div>Build separate microservice / queue / scheduler infrastructure (for prompt-layer issues) <span class="why">infrastructure can't fix LLM behavior</span></div></li>
+  </ul>
+</section>
+
+<!-- ========== DECISION AID ========== -->
+<section class="panel" id="dec">
+  <h1 class="panel-title"><em>Decision frameworks</em></h1>
+  <div class="panel-meta"><span>when to use what</span><span>10 frameworks · master summary at the bottom</span></div>
+
+  <h3 class="section">1 · Programmatic vs. prompt</h3>
+  <div class="decision">Is the requirement legal/financial/safety/regulatory?
+├── <span class="branch">YES</span> → <span class="answer">Programmatic (PreToolUse hook with prerequisite gate)</span>
+└── <span class="branch">NO</span>  → Will incorrect behavior have material consequences?
+         ├── <span class="branch">YES</span> → <span class="answer">Programmatic</span>
+         └── <span class="branch">NO</span>  → Could you tolerate ~95-99% reliability?
+                  ├── <span class="branch">YES</span> → <span class="answer">Prompt instruction</span>
+                  └── <span class="branch">NO</span>  → <span class="answer">Programmatic</span></div>
+
+  <h3 class="section">2 · Plan mode vs. direct execution</h3>
+  <div class="decision">Multi-file / architecture / cross-cutting?
+├── <span class="branch">YES</span> → <span class="answer">Plan mode</span>
+└── Multiple valid approaches with different tradeoffs?
+    ├── <span class="branch">YES</span> → <span class="answer">Plan mode</span>
+    └── Path forward clear (single bug, scoped change)?
+         └── <span class="branch">YES</span> → <span class="answer">Direct execution</span></div>
+
+  <h3 class="section">3 · Real-time vs. batch API</h3>
+  <div class="decision">Will a human or system block waiting?
+├── <span class="branch">YES</span> → <span class="answer">Real-time</span>
+└── Multi-turn tool calling needed?
+    ├── <span class="branch">YES</span> → <span class="answer">Real-time (batch lacks multi-turn)</span>
+    └── Tolerate ≤24h latency?
+         ├── <span class="branch">YES</span> → <span class="answer">Batch (50% off)</span>
+         └── <span class="branch">NO</span>  → <span class="answer">Real-time</span></div>
+
+  <h3 class="section">4 · Skill vs. CLAUDE.md vs. rules vs. command</h3>
+  <div class="decision">Auto-loaded (no user invocation)?
+├── <span class="branch">YES</span> → Path-specific or universal?
+│         ├── Universal (every file)        → <span class="answer">CLAUDE.md (project root)</span>
+│         ├── Per directory                 → <span class="answer">CLAUDE.md (in that dir)</span>
+│         └── Files spread across dirs by pattern → <span class="answer">.claude/rules/ with paths glob</span>
+└── User invokes on demand?
+    ├── Just instructions               → <span class="answer">.claude/commands/&lt;name&gt;.md</span>
+    └── Multi-step workflow w/ own ctx  → <span class="answer">.claude/skills/&lt;name&gt;/SKILL.md</span></div>
+
+  <h3 class="section">5 · Skill context: fork or not?</h3>
+  <div class="decision">Will skill produce verbose intermediate output?
+├── <span class="branch">YES</span> → <span class="answer">context: fork</span> (isolate; only summary returns)
+└── <span class="branch">NO</span>  → <span class="answer">Default</span> (output goes into main conversation)</div>
+
+  <h3 class="section">6 · Escalate, resolve, or continue?</h3>
+  <div class="decision">Customer explicitly asked for human?
+├── <span class="branch">YES</span> → <span class="answer">Escalate immediately</span>
+└── Request within agent capability AND policy?
+    ├── <span class="branch">YES</span> → <span class="answer">Resolve</span> (acknowledge frustration first if any)
+    └── Policy silent or conflicting?
+         ├── <span class="branch">YES</span> → <span class="answer">Escalate (policy gap)</span>
+         └── Agent tried and stuck?
+              ├── <span class="branch">YES</span> → <span class="answer">Escalate</span>
+              └── <span class="branch">NO</span>  → <span class="answer">Continue investigating</span></div>
+
+  <h3 class="section">7 · Tool_choice modes</h3>
+  <div class="decision">Need to guarantee structured output (no text)?
+├── <span class="branch">YES</span> → Specific tool required first?
+│         ├── <span class="branch">YES</span> → <span class="answer">tool_choice: {type:"tool", name:"X"}</span>
+│         └── <span class="branch">NO</span>  → <span class="answer">tool_choice: {type:"any"}</span>
+└── <span class="branch">NO</span>  → <span class="answer">tool_choice: {type:"auto"}</span> (default)</div>
+
+  <h3 class="section">8 · Few-shot vs. categorical criteria</h3>
+  <div class="decision">Format consistency (output shape, JSON, naming)?
+├── <span class="branch">YES</span> → <span class="answer">Few-shot examples (show, don't tell)</span>
+└── Judgment under ambiguity?
+    ├── <span class="branch">YES</span> → <span class="answer">Few-shot WITH reasoning shown</span>
+    └── Allow/deny categories?
+         └── <span class="branch">YES</span> → <span class="answer">Explicit categorical criteria</span></div>
+
+  <h3 class="section">9 · Resume vs. fresh vs. fork</h3>
+  <div class="decision">Prior context still valid (files unchanged, fresh)?
+├── <span class="branch">YES</span> → Exploring divergent path from baseline?
+│         ├── <span class="branch">YES</span> → <span class="answer">fork_session</span>
+│         └── <span class="branch">NO</span>  → <span class="answer">--resume</span>
+└── Files modified since prior?
+    ├── <span class="branch">YES</span> → <span class="answer">--resume + tell agent what changed</span>
+    └── Tool results stale (data shifted)?
+         ├── <span class="branch">YES</span> → <span class="answer">Fresh + structured summary</span>
+         └── <span class="branch">NO</span>  → <span class="answer">--resume</span></div>
+
+  <h3 class="section">10 · Single-pass vs. multi-pass review</h3>
+  <table class="ref-table">
+    <tbody>
+      <tr><td>1-3 small files</td><td><span style="color:var(--good)">Single-pass</span></td></tr>
+      <tr><td>1-3 large or 4-6 small</td><td>Single-pass with focus</td></tr>
+      <tr><td>4-10 files mixed</td><td><span style="color:var(--accent)">Multi-pass: per-file + integration</span></td></tr>
+      <tr><td>10+ files</td><td><span style="color:var(--accent)">Multi-pass, possibly parallel</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section">Master summary — one-page reference</h3>
+  <table class="ref-table">
+    <thead><tr><th>Question</th><th>Right answer</th></tr></thead>
+    <tbody>
+      <tr><td>Required invariant?</td><td>Hook</td></tr>
+      <tr><td>Soft preference?</td><td>Prompt</td></tr>
+      <tr><td>Architecture / multi-file / multi-approach?</td><td>Plan mode</td></tr>
+      <tr><td>Single clear scope?</td><td>Direct execution</td></tr>
+      <tr><td>Blocking or interactive workload?</td><td>Real-time</td></tr>
+      <tr><td>Bulk async, ≥24h tolerance?</td><td>Batch</td></tr>
+      <tr><td>Universal project standard?</td><td>Project CLAUDE.md</td></tr>
+      <tr><td>Files spread by pattern?</td><td>.claude/rules/ with globs</td></tr>
+      <tr><td>Subdirectory-specific?</td><td>Subdir CLAUDE.md</td></tr>
+      <tr><td>User-invoked workflow w/ own context?</td><td>Skill (with context: fork if verbose)</td></tr>
+      <tr><td>User-invoked instructions?</td><td>Slash command</td></tr>
+      <tr><td>Personal-only (any of above)?</td><td>~/.claude/...</td></tr>
+      <tr><td>Customer asks for human?</td><td>Escalate immediately</td></tr>
+      <tr><td>Policy gap?</td><td>Escalate</td></tr>
+      <tr><td>Multiple matches?</td><td>Continue + ask for ID</td></tr>
+      <tr><td>Format consistency?</td><td>Few-shot</td></tr>
+      <tr><td>Categorical filter?</td><td>Explicit criteria</td></tr>
+      <tr><td>Judgment under ambiguity?</td><td>Few-shot with reasoning</td></tr>
+      <tr><td>Guaranteed structure?</td><td>tool_use + schema + tool_choice</td></tr>
+      <tr><td>Pre-flight required tool?</td><td>tool_choice with specific name</td></tr>
+      <tr><td>14-file PR?</td><td>Multi-pass (per-file + integration)</td></tr>
+      <tr><td>Verbose discovery?</td><td>Subagent or context: fork skill</td></tr>
+      <tr><td>Self-review of generated code?</td><td>Independent instance</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  <em>Field reference</em> · Built for the Claude Certified Architect — Foundations exam · Domain weights from the Feb 2025 official guide
+</footer>
+
+<script>
+// Tab switching
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+const search = document.getElementById('search');
+
+function activate(panelId) {
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.panel === panelId));
+  panels.forEach(p => p.classList.toggle('active', p.id === panelId));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => activate(tab.dataset.panel));
+});
+
+// Keyboard shortcuts
+const panelOrder = ['quick', 'd1', 'd2', 'd3', 'd4', 'd5', 'anti', 'dec'];
+
+document.addEventListener('keydown', (e) => {
+  // Ignore if user is typing in search
+  if (document.activeElement === search) {
+    if (e.key === 'Escape') {
+      search.value = '';
+      clearSearch();
+      search.blur();
+    }
+    return;
+  }
+
+  if (e.key === '/') {
+    e.preventDefault();
+    search.focus();
+    return;
+  }
+
+  if (e.key === 'Escape') {
+    search.value = '';
+    clearSearch();
+    return;
+  }
+
+  // Number keys 1-8 (we have 8 tabs: quick + 5 domains + anti + dec)
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= 8) {
+    activate(panelOrder[num - 1]);
+  }
+});
+
+// Live search across all panels
+function clearSearch() {
+  document.querySelectorAll('.highlight').forEach(el => {
+    const parent = el.parentNode;
+    parent.replaceChild(document.createTextNode(el.textContent), el);
+    parent.normalize();
+  });
+  document.querySelectorAll('.card, .ref-table tr, .anti-list li').forEach(el => {
+    el.classList.remove('hidden');
+  });
+}
+
+let searchTimeout;
+search.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => doSearch(search.value.trim()), 120);
+});
+
+function doSearch(query) {
+  clearSearch();
+  if (!query) return;
+  
+  const q = query.toLowerCase();
+  
+  // Search cards
+  document.querySelectorAll('.card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (!text.includes(q)) {
+      card.classList.add('hidden');
+    } else {
+      highlightInElement(card, query);
+    }
+  });
+  
+  // Search table rows
+  document.querySelectorAll('.ref-table tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    if (!text.includes(q)) {
+      row.classList.add('hidden');
+    } else {
+      highlightInElement(row, query);
+    }
+  });
+  
+  // Search anti-pattern items
+  document.querySelectorAll('.anti-list li').forEach(li => {
+    const text = li.textContent.toLowerCase();
+    if (!text.includes(q)) {
+      li.classList.add('hidden');
+    } else {
+      highlightInElement(li, query);
+    }
+  });
+}
+
+function highlightInElement(el, query) {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+  const re = new RegExp(`(${query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  const nodes = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    if (node.nodeValue.match(re)) nodes.push(node);
+  }
+  nodes.forEach(n => {
+    if (n.parentElement.tagName === 'SCRIPT' || n.parentElement.tagName === 'STYLE') return;
+    const parts = n.nodeValue.split(re);
+    const frag = document.createDocumentFragment();
+    parts.forEach(p => {
+      if (re.test(p)) {
+        const span = document.createElement('span');
+        span.className = 'highlight';
+        span.textContent = p;
+        frag.appendChild(span);
+        re.lastIndex = 0;
+      } else {
+        frag.appendChild(document.createTextNode(p));
+      }
+    });
+    n.parentNode.replaceChild(frag, n);
+  });
+}
+</script>
+
+</body>
+</html>
