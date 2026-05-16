@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Claude Architect · Foundations Roadmap</title>
+<meta name="theme-color" content="#f1eee7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f1eee7;
+  --paper-2: #e9e4d8;
+  --paper-3: #ddd5c2;
+  --ink: #1c1815;
+  --ink-dim: #5b5347;
+  --ink-faint: #968c79;
+  --rule: #c8bfa8;
+  --accent: #a8431f;
+  --accent-soft: #c46239;
+  --done: #5a7a3a;
+  --done-soft: #7c9858;
+  --highlight: #e8c97a;
+  --shadow: 0 1px 0 rgba(28, 24, 21, 0.04), 0 8px 24px rgba(28, 24, 21, 0.06);
+  --shadow-strong: 0 2px 0 rgba(28, 24, 21, 0.05), 0 16px 40px rgba(28, 24, 21, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 400;
+  background-image:
+    radial-gradient(rgba(168, 67, 31, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  min-height: 100vh;
+}
+
+.serif-display {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ===================== HEADER / HERO ===================== */
+.hero {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: var(--accent);
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 40px 40px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: '——';
+  margin: 0 12px;
+  color: var(--rule);
+  letter-spacing: 0;
+}
+
+.hero-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(48px, 8vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-dim);
+  margin-bottom: 32px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 300;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  max-width: 900px;
+  margin: 32px auto 0;
+  padding: 20px 0;
+}
+
+.hero-stat {
+  flex: 1;
+  min-width: 140px;
+  padding: 0 24px;
+  border-right: 1px solid var(--rule);
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 38px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.hero-stat-num em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 8px;
+}
+
+/* ===================== PROGRESS BAR ===================== */
+.progress-strip {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(241, 238, 231, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.progress-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 40px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.progress-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--paper-2);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+  transition: width 0.4s ease-out;
+}
+
+.progress-pct {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  min-width: 60px;
+  text-align: right;
+}
+
+.progress-pct .total {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-left: 4px;
+}
+
+/* ===================== MAIN CONTENT ===================== */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+
+/* Exam date widget */
+.exam-date-widget {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  padding: 18px 24px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.exam-date-widget label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.exam-date-widget input[type="date"] {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  border-radius: 2px;
+}
+
+.exam-date-widget input[type="date"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.days-remaining {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--accent);
+  font-style: italic;
+}
+
+.days-remaining strong {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--accent);
+}
+
+/* ===================== PHASES ===================== */
+.phase {
+  margin-bottom: 60px;
+}
+
+.phase-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 24px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.phase-number {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 80px;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.phase-titleblock {
+  padding-bottom: 8px;
+}
+
+.phase-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.phase-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.phase-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.phase-meta {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+  padding-bottom: 8px;
+  white-space: nowrap;
+}
+
+.phase-meta .weight {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--accent);
+  font-style: italic;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.phase-meta .meta-line {
+  display: block;
+  margin-top: 2px;
+}
+
+/* Phase progress mini-bar */
+.phase-progress {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.phase-progress-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--paper-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.phase-progress-fill {
+  height: 100%;
+  background: var(--done);
+  transition: width 0.3s;
+}
+
+.phase-progress-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  min-width: 60px;
+  text-align: right;
+}
+
+.phase-intro {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-dim);
+  margin-bottom: 24px;
+  max-width: 720px;
+  font-weight: 300;
+}
+
+/* ===================== MODULES ===================== */
+.modules {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.module {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper);
+  margin-bottom: 8px;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  cursor: pointer;
+  position: relative;
+}
+
+.module:hover {
+  background: var(--paper-2);
+  border-color: var(--accent);
+  transform: translateX(2px);
+}
+
+.module.done {
+  background: var(--paper);
+  border-color: var(--rule);
+  opacity: 0.65;
+}
+
+.module.done .module-title {
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-faint);
+  text-decoration-thickness: 1px;
+}
+
+.module-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.module-check-box {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--ink-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  transition: all 0.2s;
+  position: relative;
+}
+
+.module:hover .module-check-box {
+  border-color: var(--accent);
+}
+
+.module.done .module-check-box {
+  background: var(--done);
+  border-color: var(--done);
+}
+
+.module.done .module-check-box::after {
+  content: '✓';
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.module-content {
+  min-width: 0;
+}
+
+.module-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.module-title {
+  font-family: 'Newsreader', serif;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.module-desc {
+  font-family: 'Newsreader', serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.module-meta {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.module-time {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.module-ref {
+  background: var(--paper-2);
+  color: var(--ink-dim);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 9px;
+}
+
+/* Capstone module variant */
+.module.capstone {
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent);
+}
+
+.module.capstone .module-id::before {
+  content: '◆ ';
+  color: var(--accent);
+}
+
+.module.capstone.done {
+  background: var(--paper-2);
+  opacity: 0.7;
+}
+
+/* Notes (expandable) */
+.module-notes {
+  display: none;
+  grid-column: 2 / -1;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+
+.module.expanded .module-notes {
+  display: block;
+}
+
+.module-notes textarea {
+  width: 100%;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  font-family: 'Newsreader', serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 2px;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.module-notes textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.module-notes-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.module-action {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-mini {
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--ink-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+
+.btn-mini:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+/* ===================== CONTROLS BAR ===================== */
+.controls {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 10px 18px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  border-radius: 2px;
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn.danger {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn.danger:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* ===================== TOC NAV ===================== */
+.toc {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 12px 10px;
+  max-width: 220px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+@media (min-width: 1400px) {
+  .toc { display: block; }
+}
+
+.toc-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 4px 8px 8px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 6px;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.toc-item:hover {
+  background: var(--paper-2);
+  color: var(--accent);
+}
+
+.toc-item .toc-num {
+  font-style: italic;
+  font-family: 'Instrument Serif', serif;
+  font-size: 14px;
+  color: var(--accent);
+  min-width: 14px;
+}
+
+.toc-item .toc-dot {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  transition: all 0.2s;
+}
+
+.toc-item.complete .toc-dot {
+  background: var(--done);
+  border-color: var(--done);
+}
+
+.toc-item.partial .toc-dot {
+  background: var(--highlight);
+  border-color: var(--highlight);
+}
+
+/* ===================== FOOTER ===================== */
+footer {
+  text-align: center;
+  padding: 60px 40px 40px;
+  border-top: 1px solid var(--rule);
+  margin-top: 40px;
+}
+
+.footer-mark {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.footer-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.footer-text + .footer-text {
+  margin-top: 6px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .hero-inner { padding: 40px 20px 30px; }
+  main { padding: 24px 16px; }
+  .hero-stat { min-width: 100px; padding: 0 12px; }
+  .hero-stat-num { font-size: 28px; }
+  .progress-inner { grid-template-columns: 1fr; gap: 8px; padding: 12px 16px; }
+  .phase-header { grid-template-columns: auto 1fr; gap: 16px; }
+  .phase-meta { grid-column: 1 / -1; text-align: left; }
+  .phase-number { font-size: 56px; }
+  .phase-title { font-size: 26px; }
+  .module { grid-template-columns: 36px 1fr; padding: 14px 16px; }
+  .module-meta { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; }
+  .module-title { font-size: 16px; }
+  .exam-date-widget { flex-direction: column; align-items: flex-start; }
+}
+
+/* Hidden file input for import */
+.hidden-input { display: none; }
+
+/* Toast for save notifications */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--paper-3); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--rule); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">A study companion · v 1.0</div>
+    <h1 class="hero-title">The Claude <em>Architect</em></h1>
+    <p class="hero-sub">A roadmap to the Foundations certification — 9 phases, 46 modules, 4 capstone labs. Track every concept you've internalized.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-modules">0<em>/46</em></div>
+        <div class="hero-stat-label">Modules</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-capstones">0<em>/4</em></div>
+        <div class="hero-stat-label">Capstones</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-hours"><em>0</em>h</div>
+        <div class="hero-stat-label">Invested</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-phases">0<em>/9</em></div>
+        <div class="hero-stat-label">Phases</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="progress-strip">
+  <div class="progress-inner">
+    <div class="progress-label">Overall progress</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="progress-pct" id="progress-pct">0%<span class="total"></span></div>
+  </div>
+</div>
+
+<main>
+  <div class="exam-date-widget">
+    <label for="exam-date">Exam date</label>
+    <input type="date" id="exam-date">
+    <div class="days-remaining" id="days-remaining"><em>Set your exam date to see countdown</em></div>
+  </div>
+
+  <div id="phases-container"></div>
+
+  <div class="controls">
+    <button class="btn" id="btn-export">Export progress</button>
+    <button class="btn" id="btn-import">Import progress</button>
+    <input type="file" id="import-file" class="hidden-input" accept="application/json">
+    <button class="btn" id="btn-mark-all">Mark phase complete</button>
+    <button class="btn danger" id="btn-reset">Reset all</button>
+  </div>
+</main>
+
+<aside class="toc" id="toc">
+  <div class="toc-title">Phase index</div>
+  <div id="toc-items"></div>
+</aside>
+
+<footer>
+  <div class="footer-mark">finis</div>
+  <div class="footer-text">Built for the Claude Certified Architect — Foundations exam</div>
+  <div class="footer-text">Progress stored locally in your browser · export to back up across machines</div>
+</footer>
+
+<div class="toast" id="toast">saved</div>
+
+<script>
+// ============================================================
+// DATA — phases, modules, capstones
+// ============================================================
+const ROADMAP = [
+  {
+    id: 'p1',
+    number: 'I',
+    eyebrow: 'Orientation',
+    title: 'Lay the <em>map</em>',
+    intro: 'Build the mental scaffolding first. The 80/20 view, the bridge from your existing background, and the exam structure itself.',
+    weight: '—',
+    hours: '3 hrs',
+    modules: [
+      { id: '1.1', title: 'Five mental models · the 80/20', desc: 'Internalize one model per domain (thermostat loop, job description, team handbook, recipe vs. dish, lossy compression).', ref: 'file 01', time: '60 min' },
+      { id: '1.2', title: 'Strands & Azure translation map', desc: 'Map your existing Bedrock + Strands knowledge onto Claude Agent SDK terminology — what transfers, what is new.', ref: 'file 02', time: '60 min' },
+      { id: '1.3', title: 'Domain weights & scenario coverage', desc: 'Domain weights (D1 27%, D3 20%, D4 20%, D2 18%, D5 15%) and the six exam scenarios.', ref: 'file 00', time: '30 min' },
+    ],
+  },
+  {
+    id: 'p2',
+    number: 'II',
+    eyebrow: 'Domain 1',
+    title: '<em>Agentic</em> Architecture',
+    intro: 'The largest domain by weight. Coordinator-subagent orchestration, the agentic loop, hooks for programmatic enforcement, and session operations.',
+    weight: '27%',
+    hours: '8 hrs',
+    modules: [
+      { id: '2.1', title: 'Agentic loop · stop_reason', desc: 'while stop_reason == "tool_use" execute and feed back; stop on "end_turn". Never parse text.', ref: 'D1 · 1.1', time: '60 min' },
+      { id: '2.2', title: 'Hub-and-spoke coordinator', desc: 'All inter-subagent communication routes through the coordinator. Subagents have fresh context.', ref: 'D1 · 1.2', time: '60 min' },
+      { id: '2.3', title: 'Subagent invocation & parallelism', desc: 'Agent (exam: Task) in allowedTools. Pack everything in the prompt. Multiple calls in one response = parallel.', ref: 'D1 · 1.3', time: '60 min' },
+      { id: '2.4', title: 'Hooks for required invariants', desc: 'PreToolUse with prerequisite gate for verify-before-refund patterns. Programmatic > prompt for financial/legal/safety.', ref: 'D1 · 1.4', time: '90 min' },
+      { id: '2.5', title: 'PostToolUse · normalization & redaction', desc: 'Hook to normalize heterogeneous tool outputs (timestamps), scrub PHI, trim verbose responses.', ref: 'D1 · 1.5', time: '60 min' },
+      { id: '2.6', title: 'Task decomposition strategies', desc: 'Prompt chaining (predictable multi-aspect) vs. dynamic adaptive (open-ended). Per-file + integration pass for large reviews.', ref: 'D1 · 1.6', time: '60 min' },
+      { id: '2.7', title: 'Session · resume / fresh / fork', desc: '--resume when valid, fresh + summary when stale, fork_session for divergent baselines.', ref: 'D1 · 1.7', time: '60 min' },
+    ],
+  },
+  {
+    id: 'p3',
+    number: 'III',
+    eyebrow: 'Domain 2',
+    title: 'Tools &amp; <em>MCP</em>',
+    intro: 'Tool descriptions are the primary selection mechanism. Invest in description quality before reaching for routing layers.',
+    weight: '18%',
+    hours: '5 hrs',
+    modules: [
+      { id: '3.1', title: 'Tool description templates', desc: 'Six elements: purpose, inputs, outputs, when-to-use, edge cases, boundaries. Bad → Better → Best ladder.', ref: 'D2 · 2.1', time: '60 min' },
+      { id: '3.2', title: 'Structured error responses', desc: 'errorCategory (transient, validation, business, permission) + isRetryable + humanReadable. Generic errors are anti-patterns.', ref: 'D2 · 2.2', time: '45 min' },
+      { id: '3.3', title: 'Tool distribution & tool_choice', desc: 'Scope to 4-5 tools per agent role. Modes: auto (default), any (force tool), specific name (force this tool).', ref: 'D2 · 2.3', time: '45 min' },
+      { id: '3.4', title: 'MCP integration · .mcp.json', desc: 'Project-scoped (.mcp.json) vs. user-scoped (~/.claude.json). Env var expansion for secrets. Tools vs. resources.', ref: 'D2 · 2.4', time: '60 min' },
+      { id: '3.5', title: 'Built-in tools · Grep · Glob · Edit', desc: 'Grep for content, Glob for paths, Edit fails on non-unique text (fall back to Read+Write). Incremental codebase understanding.', ref: 'D2 · 2.5', time: '60 min' },
+    ],
+  },
+  {
+    id: 'p4',
+    number: 'IV',
+    eyebrow: 'Domain 3',
+    title: '<em>Claude</em> Code',
+    intro: 'The most genuinely new domain for you. CLAUDE.md hierarchy, the .claude/ ecosystem, plan mode, and CI/CD integration.',
+    weight: '20%',
+    hours: '7 hrs',
+    modules: [
+      { id: '4.1', title: 'CLAUDE.md hierarchy · /memory', desc: 'User (~/.claude/) personal · Project root (shared) · Subdir (scoped). Diagnostic with /memory. @import for modularity.', ref: 'D3 · 3.1', time: '60 min' },
+      { id: '4.2', title: 'Custom slash commands', desc: '.claude/commands/<name>.md with frontmatter (description, argument-hint, allowed-tools). $ARGUMENTS interpolation.', ref: 'D3 · 3.2', time: '60 min' },
+      { id: '4.3', title: 'Skills · context: fork', desc: '.claude/skills/<name>/SKILL.md. context: fork isolates verbose discovery from main session. Personal variants in ~/.claude/.', ref: 'D3 · 3.2', time: '60 min' },
+      { id: '4.4', title: '.claude/rules/ · glob patterns', desc: 'For files spread across directories (e.g., **/*.test.tsx). YAML frontmatter with paths globs.', ref: 'D3 · 3.3', time: '60 min' },
+      { id: '4.5', title: 'Plan mode vs. direct + refinement', desc: 'Plan mode for architectural/multi-file/multi-approach. Direct for clear scope. Iterative refinement techniques.', ref: 'D3 · 3.4-5', time: '90 min' },
+      { id: '4.6', title: 'CI/CD integration · -p flag', desc: 'claude -p (non-interactive), --output-format json, --json-schema. CLAUDE.md provides CI context. Independent review.', ref: 'D3 · 3.6', time: '60 min' },
+    ],
+  },
+  {
+    id: 'p5',
+    number: 'V',
+    eyebrow: 'Domain 4',
+    title: 'Prompt <em>Engineering</em>',
+    intro: 'Your strongest territory. Structured output via tool_use, batch vs. real-time, multi-pass review architecture.',
+    weight: '20%',
+    hours: '6 hrs',
+    modules: [
+      { id: '5.1', title: 'Explicit criteria vs. vague', desc: '"Be conservative" does not work. Use categorical allow/deny lists with code examples per severity.', ref: 'D4 · 4.1', time: '45 min' },
+      { id: '5.2', title: 'Few-shot prompting', desc: '2-4 targeted examples beat 10 generic ones. Cover ambiguous cases, show reasoning, demonstrate format.', ref: 'D4 · 4.2', time: '45 min' },
+      { id: '5.3', title: 'tool_use + JSON schema', desc: 'Eliminates syntactic errors (not semantic). Optional/nullable fields. "other" + detail enum. tool_choice modes.', ref: 'D4 · 4.3', time: '60 min' },
+      { id: '5.4', title: 'Validation & retry with feedback', desc: 'Retry with specific error in prompt for format errors. Cannot retry-conjure absent information. Paired stated/calculated fields.', ref: 'D4 · 4.4', time: '60 min' },
+      { id: '5.5', title: 'Batch vs. real-time API', desc: 'Batch: 50% off, ≤24h, no multi-turn. Never for blocking workflows. custom_id correlates requests.', ref: 'D4 · 4.5', time: '60 min' },
+      { id: '5.6', title: 'Multi-pass review · independent instance', desc: 'Per-file + cross-file integration pass for attention dilution. Independent instance for review (avoid self-review bias).', ref: 'D4 · 4.6', time: '60 min' },
+    ],
+  },
+  {
+    id: 'p6',
+    number: 'VI',
+    eyebrow: 'Domain 5',
+    title: 'Context &amp; <em>Reliability</em>',
+    intro: 'Smallest by weight but threads through every scenario. Structure outlives summarization.',
+    weight: '15%',
+    hours: '6 hrs',
+    modules: [
+      { id: '6.1', title: 'Persistent case facts', desc: 'Structured facts (customer_id, verification, amounts) injected into every prompt outside summarized history. Your CRO pattern.', ref: 'D5 · 5.1', time: '60 min' },
+      { id: '6.2', title: 'Escalation triggers', desc: 'Valid: explicit human request, policy gap, agent stuck. Anti: sentiment, LLM self-confidence, heuristic complexity.', ref: 'D5 · 5.2', time: '45 min' },
+      { id: '6.3', title: 'Error propagation in multi-agent', desc: 'Structured failure context (type, partial results, alternatives). Local recovery before propagation. Coverage annotations.', ref: 'D5 · 5.3', time: '60 min' },
+      { id: '6.4', title: 'Large codebase context', desc: 'Scratchpad files for findings · subagent delegation for verbose discovery · /compact for in-session reduction.', ref: 'D5 · 5.4', time: '60 min' },
+      { id: '6.5', title: 'Confidence calibration · stratified sampling', desc: 'Per-field confidence calibrated to validation set. Stratified > random sampling. Route low-confidence to humans.', ref: 'D5 · 5.5', time: '60 min' },
+      { id: '6.6', title: 'Source provenance through synthesis', desc: 'Structured claim-source mappings. Conflicting sources: annotate with both attributions. Preserve dates and methodology.', ref: 'D5 · 5.6', time: '60 min' },
+    ],
+  },
+  {
+    id: 'p7',
+    number: 'VII',
+    eyebrow: 'Recognition',
+    title: '<em>Anti-Patterns</em> &amp; Frameworks',
+    intro: 'Multiple-choice exams test recognition of wrong answers as much as the right one. Memorize the diagnostic phrases.',
+    weight: '—',
+    hours: '7 hrs',
+    modules: [
+      { id: '7.1', title: 'D1 anti-patterns drill', desc: '10 anti-patterns: text parsing for loop · iteration caps · prompt-based invariants · sequential when parallel possible · stale resumption.', ref: 'file 08 · D1', time: '45 min' },
+      { id: '7.2', title: 'D2 anti-patterns drill', desc: '11 anti-patterns: few-shot before description fix · classifiers · mega-tool consolidation · generic errors · 18-tool overload · ~/.claude.json for team sharing.', ref: 'file 08 · D2', time: '45 min' },
+      { id: '7.3', title: 'D3 anti-patterns drill', desc: '16 anti-patterns: personal CLAUDE.md for shared standards · subdir CLAUDE.md for scattered files · CLAUDE_HEADLESS · --batch · same-session self-review.', ref: 'file 08 · D3', time: '60 min' },
+      { id: '7.4', title: 'D4 anti-patterns drill', desc: '9 anti-patterns: be conservative · self-confidence as gate · "respond in JSON" · all-required schemas · batch for blocking · retry for absent info.', ref: 'file 08 · D4', time: '45 min' },
+      { id: '7.5', title: 'D5 + cross-cutting anti-patterns', desc: 'D5 (12): summarization for specifics, sentiment escalation, heuristic match-picking, etc. Cross-cutting (5): classifiers, model upgrades, infrastructure for prompt issues.', ref: 'file 08 · D5+X', time: '60 min' },
+      { id: '7.6', title: 'Decision frameworks 1-3', desc: 'Programmatic vs. prompt · Plan mode vs. direct · Real-time vs. batch API.', ref: 'file 09', time: '45 min' },
+      { id: '7.7', title: 'Decision frameworks 4-6', desc: 'Config mechanism (CLAUDE.md / rules / commands / skills) · context: fork · Escalate / resolve / continue.', ref: 'file 09', time: '45 min' },
+      { id: '7.8', title: 'Decision frameworks 7-10', desc: 'tool_choice modes · Few-shot vs. criteria · Resume / fresh / fork · Single vs. multi-pass review.', ref: 'file 09', time: '45 min' },
+      { id: '7.9', title: 'Master summary memorization', desc: 'Cover the answer column. Recite the right answer for each question in the master summary table.', ref: 'file 09', time: '30 min' },
+    ],
+  },
+  {
+    id: 'p8',
+    number: 'VIII',
+    eyebrow: 'Capstones',
+    title: 'Hands-on <em>labs</em>',
+    intro: 'Build each lab end-to-end with the Claude Agent SDK. Each capstone exercises 2-3 domains simultaneously.',
+    weight: '—',
+    hours: '10 hrs',
+    capstones: [
+      { id: 'C1', title: 'Customer Support Resolution Agent', desc: 'Build with PreToolUse hook for verification, > $500 refund blocking, structured handoff payload. Exercises D1, D2, D5.', ref: 'Lab 1', time: '2.5 hrs' },
+      { id: 'C2', title: 'Multi-Agent Research System', desc: 'Coordinator + parallel search subagents + synthesizer preserving source attribution. Exercises D1, D2, D5.', ref: 'Lab 2', time: '2.5 hrs' },
+      { id: 'C3', title: 'Structured Extraction Pipeline', desc: 'Invoice extraction with tool_use + JSON schema + validation retry + field-level confidence routing. Exercises D4, D5.', ref: 'Lab 3', time: '2.5 hrs' },
+      { id: 'C4', title: 'Claude Code Project + CI/CD', desc: 'CLAUDE.md hierarchy + slash commands + skills with context: fork + path-specific rules + GitHub Actions with -p flag. Exercises D3.', ref: 'Lab 4', time: '2.5 hrs' },
+    ],
+  },
+  {
+    id: 'p9',
+    number: 'IX',
+    eyebrow: 'The exam itself',
+    title: '<em>Practice</em> &amp; mock exam',
+    intro: 'Calibrate your readiness with timed practice. Aim for 85%+ on the final mock to walk in confident.',
+    weight: '—',
+    hours: '6 hrs',
+    modules: [
+      { id: '9.1', title: 'Practice · D1 + D2 sections', desc: '11 + 7 questions covering Agentic Architecture and Tools/MCP. Time yourself.', ref: 'file 11', time: '45 min' },
+      { id: '9.2', title: 'Practice · D3 + D4 sections', desc: '8 + 8 questions covering Claude Code and Prompt Engineering.', ref: 'file 11', time: '45 min' },
+      { id: '9.3', title: 'Practice · D5 + final cross-domain', desc: '6 + 5 questions covering Context/Reliability and combined-scenario questions.', ref: 'file 11', time: '45 min' },
+      { id: '9.4', title: 'Full timed mock — first attempt', desc: 'Take the full 40-question test in one sitting, timed. Mark every miss and trace it back to the anti-pattern.', ref: 'file 11', time: '90 min' },
+      { id: '9.5', title: 'Full timed mock — second attempt', desc: 'Re-do after one week. Aim for ≥85%. Triage any remaining gaps.', ref: 'file 11', time: '90 min' },
+    ],
+  },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+const STATE_KEY = 'cca-roadmap-state-v1';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STATE_KEY);
+    if (!raw) return { modules: {}, notes: {}, examDate: null };
+    return JSON.parse(raw);
+  } catch (e) {
+    return { modules: {}, notes: {}, examDate: null };
+  }
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('Save failed:', e);
+  }
+}
+
+let state = loadState();
+
+// ============================================================
+// RENDER
+// ============================================================
+function totalModules() {
+  return ROADMAP.reduce((sum, p) => sum + (p.modules?.length || 0) + (p.capstones?.length || 0), 0);
+}
+
+function totalCapstones() {
+  return ROADMAP.reduce((sum, p) => sum + (p.capstones?.length || 0), 0);
+}
+
+function totalHoursDone() {
+  let total = 0;
+  ROADMAP.forEach(p => {
+    [...(p.modules || []), ...(p.capstones || [])].forEach(m => {
+      if (state.modules[m.id]) {
+        const t = m.time;
+        if (t.includes('min')) total += parseInt(t) / 60;
+        else if (t.includes('hr')) total += parseFloat(t);
+      }
+    });
+  });
+  return Math.round(total * 10) / 10;
+}
+
+function modulesDone() {
+  let n = 0;
+  ROADMAP.forEach(p => {
+    [...(p.modules || []), ...(p.capstones || [])].forEach(m => {
+      if (state.modules[m.id]) n++;
+    });
+  });
+  return n;
+}
+
+function capstonesDone() {
+  let n = 0;
+  ROADMAP.forEach(p => {
+    (p.capstones || []).forEach(m => {
+      if (state.modules[m.id]) n++;
+    });
+  });
+  return n;
+}
+
+function phasesComplete() {
+  let n = 0;
+  ROADMAP.forEach(p => {
+    const items = [...(p.modules || []), ...(p.capstones || [])];
+    if (items.length > 0 && items.every(m => state.modules[m.id])) n++;
+  });
+  return n;
+}
+
+function phaseProgress(phase) {
+  const items = [...(phase.modules || []), ...(phase.capstones || [])];
+  if (items.length === 0) return { done: 0, total: 0, pct: 0 };
+  const done = items.filter(m => state.modules[m.id]).length;
+  return { done, total: items.length, pct: Math.round((done / items.length) * 100) };
+}
+
+function renderHero() {
+  document.getElementById('stat-modules').innerHTML = `${modulesDone()}<em>/${totalModules()}</em>`;
+  document.getElementById('stat-capstones').innerHTML = `${capstonesDone()}<em>/${totalCapstones()}</em>`;
+  document.getElementById('stat-hours').innerHTML = `<em>${totalHoursDone()}</em>h`;
+  document.getElementById('stat-phases').innerHTML = `${phasesComplete()}<em>/${ROADMAP.length}</em>`;
+  
+  const total = totalModules();
+  const done = modulesDone();
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').innerHTML = `${pct}%<span class="total"> · ${done}/${total}</span>`;
+}
+
+function renderModule(m, isCapstone = false) {
+  const done = !!state.modules[m.id];
+  const note = state.notes[m.id] || '';
+  const div = document.createElement('div');
+  div.className = `module ${done ? 'done' : ''} ${isCapstone ? 'capstone' : ''}`;
+  div.dataset.id = m.id;
+  div.innerHTML = `
+    <div class="module-check" data-toggle="${m.id}">
+      <div class="module-check-box"></div>
+    </div>
+    <div class="module-content">
+      <div class="module-id">${isCapstone ? 'Capstone ' + m.id : 'Module ' + m.id}</div>
+      <div class="module-title">${m.title}</div>
+      <div class="module-desc">${m.desc}</div>
+      <div class="module-notes">
+        <div class="module-notes-label">Notes — your own takeaways, questions, gotchas</div>
+        <textarea data-notes="${m.id}" placeholder="Anything you want to remember about this module…">${note}</textarea>
+      </div>
+    </div>
+    <div class="module-meta">
+      <span class="module-time">${m.time}</span>
+      <span class="module-ref">${m.ref}</span>
+      <button class="btn-mini" data-expand="${m.id}" style="margin-top: 6px;">notes</button>
+    </div>
+  `;
+  return div;
+}
+
+function renderPhase(phase) {
+  const wrapper = document.createElement('section');
+  wrapper.className = 'phase';
+  wrapper.id = phase.id;
+  
+  const items = [...(phase.modules || []), ...(phase.capstones || [])];
+  const prog = phaseProgress(phase);
+  
+  const header = document.createElement('div');
+  header.className = 'phase-header';
+  header.innerHTML = `
+    <div class="phase-number">${phase.number}</div>
+    <div class="phase-titleblock">
+      <div class="phase-eyebrow">${phase.eyebrow}</div>
+      <h2 class="phase-title">${phase.title}</h2>
+    </div>
+    <div class="phase-meta">
+      <span class="weight">${phase.weight}</span>
+      <span class="meta-line">${items.length} ${phase.capstones ? 'capstones' : 'modules'}</span>
+      <span class="meta-line">≈ ${phase.hours}</span>
+    </div>
+  `;
+  wrapper.appendChild(header);
+  
+  // Mini progress bar
+  const progDiv = document.createElement('div');
+  progDiv.className = 'phase-progress';
+  progDiv.innerHTML = `
+    <div class="phase-progress-bar"><div class="phase-progress-fill" style="width: ${prog.pct}%"></div></div>
+    <div class="phase-progress-text">${prog.done}/${prog.total} · ${prog.pct}%</div>
+  `;
+  wrapper.appendChild(progDiv);
+  
+  // Intro
+  if (phase.intro) {
+    const intro = document.createElement('p');
+    intro.className = 'phase-intro';
+    intro.textContent = phase.intro;
+    wrapper.appendChild(intro);
+  }
+  
+  // Modules
+  const modulesDiv = document.createElement('div');
+  modulesDiv.className = 'modules';
+  
+  (phase.modules || []).forEach(m => {
+    modulesDiv.appendChild(renderModule(m, false));
+  });
+  
+  (phase.capstones || []).forEach(c => {
+    modulesDiv.appendChild(renderModule(c, true));
+  });
+  
+  wrapper.appendChild(modulesDiv);
+  
+  return wrapper;
+}
+
+function renderTOC() {
+  const container = document.getElementById('toc-items');
+  container.innerHTML = '';
+  ROADMAP.forEach(p => {
+    const prog = phaseProgress(p);
+    const status = prog.pct === 100 ? 'complete' : (prog.pct > 0 ? 'partial' : '');
+    const a = document.createElement('a');
+    a.href = '#' + p.id;
+    a.className = `toc-item ${status}`;
+    const ebrow = p.eyebrow.replace(/<[^>]+>/g, '');
+    a.innerHTML = `
+      <span class="toc-num">${p.number}</span>
+      <span>${ebrow}</span>
+      <span class="toc-dot"></span>
+    `;
+    container.appendChild(a);
+  });
+}
+
+function render() {
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+  ROADMAP.forEach(p => {
+    container.appendChild(renderPhase(p));
+  });
+  renderHero();
+  renderTOC();
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+function toggleModule(id) {
+  state.modules[id] = !state.modules[id];
+  saveState(state);
+  render();
+  showToast(state.modules[id] ? 'Complete' : 'Unmarked');
+}
+
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+document.addEventListener('click', (e) => {
+  const toggle = e.target.closest('[data-toggle]');
+  if (toggle) {
+    e.stopPropagation();
+    toggleModule(toggle.dataset.toggle);
+    return;
+  }
+  
+  const expand = e.target.closest('[data-expand]');
+  if (expand) {
+    e.stopPropagation();
+    const module = expand.closest('.module');
+    module.classList.toggle('expanded');
+    if (module.classList.contains('expanded')) {
+      setTimeout(() => {
+        const ta = module.querySelector('textarea');
+        if (ta) ta.focus();
+      }, 50);
+    }
+    return;
+  }
+  
+  // Click on module itself (but not on the check, notes, or expand button) → toggle
+  const module = e.target.closest('.module');
+  if (module && !e.target.closest('textarea')) {
+    toggleModule(module.dataset.id);
+  }
+});
+
+document.addEventListener('input', (e) => {
+  const notes = e.target.closest('[data-notes]');
+  if (notes) {
+    state.notes[notes.dataset.notes] = notes.value;
+    // Throttle save
+    clearTimeout(window._notesSaveTimeout);
+    window._notesSaveTimeout = setTimeout(() => {
+      saveState(state);
+      showToast('Saved');
+    }, 800);
+  }
+});
+
+// ============================================================
+// EXAM DATE
+// ============================================================
+function updateDaysRemaining() {
+  const input = document.getElementById('exam-date');
+  const display = document.getElementById('days-remaining');
+  
+  if (state.examDate) {
+    input.value = state.examDate;
+  }
+  
+  if (!input.value) {
+    display.innerHTML = '<em>Set your exam date to see countdown</em>';
+    return;
+  }
+  
+  const target = new Date(input.value);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const diff = Math.round((target - now) / (1000 * 60 * 60 * 24));
+  
+  if (diff < 0) {
+    display.innerHTML = `<em>Exam was ${Math.abs(diff)} days ago</em>`;
+  } else if (diff === 0) {
+    display.innerHTML = `<strong>Today.</strong> <em>Trust the prep.</em>`;
+  } else if (diff === 1) {
+    display.innerHTML = `<strong>1</strong> <em>day to go</em>`;
+  } else {
+    display.innerHTML = `<strong>${diff}</strong> <em>days to go</em>`;
+  }
+}
+
+document.getElementById('exam-date').addEventListener('change', (e) => {
+  state.examDate = e.target.value;
+  saveState(state);
+  updateDaysRemaining();
+});
+
+// ============================================================
+// CONTROLS
+// ============================================================
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cca-roadmap-progress-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported');
+});
+
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (imported.modules) state = imported;
+      saveState(state);
+      render();
+      updateDaysRemaining();
+      showToast('Imported');
+    } catch (err) {
+      showToast('Import failed');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+document.getElementById('btn-mark-all').addEventListener('click', () => {
+  // Find phase nearest to current scroll, mark all its modules done
+  const phases = [...document.querySelectorAll('.phase')];
+  const scrollY = window.scrollY + 200;
+  let target = phases[0];
+  for (const p of phases) {
+    if (p.offsetTop <= scrollY) target = p;
+    else break;
+  }
+  if (!target) return;
+  const phaseData = ROADMAP.find(p => p.id === target.id);
+  if (!phaseData) return;
+  const items = [...(phaseData.modules || []), ...(phaseData.capstones || [])];
+  const allDone = items.every(m => state.modules[m.id]);
+  items.forEach(m => {
+    state.modules[m.id] = !allDone;
+  });
+  saveState(state);
+  render();
+  showToast(allDone ? 'Phase reset' : 'Phase complete');
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (confirm('Reset all progress? This cannot be undone (unless you exported first).')) {
+    state = { modules: {}, notes: {}, examDate: null };
+    saveState(state);
+    document.getElementById('exam-date').value = '';
+    render();
+    updateDaysRemaining();
+    showToast('Reset');
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+render();
+updateDaysRemaining();
+</script>
+
+</body>
+</html>
